@@ -46,10 +46,20 @@ export default {
     this.FetchApi();
     var t3 = performance.now();
     console.log("time run with promise : " + (t3 - t2) + " miliseconds");
-    // var t4 = performance.now();
-    // this.getdataPhoto(this.getdataComment(this.getdataTodo()));
-    // var t5 = performance.now();
-    // console.log("time run with callback" + (t5 - t4) + "miliseconds");
+    var t4 = performance.now();
+    var self = this;
+    this.getdataPhoto(function (data) {
+      self.dataPhotoCallback = data;
+      console.log(self.dataPhotoCallback);
+    });
+    this.getdataComment(function (data) {
+      self.dataCommentCallback = data;
+    });
+    this.getdataTodo(function (data) {
+      self.dataTodoCallback = data;
+    });
+    var t5 = performance.now();
+    console.log("time run with callback " + (t5 - t4) + " miliseconds");
   },
   methods: {
     //promise
@@ -85,45 +95,37 @@ export default {
           console.log("rejected", err);
         });
     },
-    //callback
-    // getdataComment(callback) {
-    //   fetch("https://jsonplaceholder.typicode.com/comments")
-    //     .then((resp) => {
-    //       return resp.json();
-    //     })
-    //     .then((data) => {
-    //       this.dataCommentCallback = data;
-    //     })
-    //     .catch((err) => {
-    //       console.log("rejected", err);
-    //     });
-    //   callback();
-    // },
-    // getdataPhoto(callback) {
-    //   fetch("https://jsonplaceholder.typicode.com/photos")
-    //     .then((resp) => {
-    //       return resp.json();
-    //     })
-    //     .then((data) => {
-    //       this.dataPhotoCallback = data;
-    //     })
-    //     .catch((err) => {
-    //       console.log("rejected", err);
-    //     });
-    //   callback();
-    // },
-    // getdataTodo() {
-    //   fetch("https://jsonplaceholder.typicode.com/todos")
-    //     .then((resp) => {
-    //       return resp.json();
-    //     })
-    //     .then((data) => {
-    //       this.dataTodoCallback = data;
-    //     })
-    //     .catch((err) => {
-    //       console.log("rejected", err);
-    //     });
-    // },
+    // callback
+    getdataComment(callback) {
+      fetch("https://jsonplaceholder.typicode.com/comments")
+        .then((resp) => {
+          return resp.json();
+        })
+        .then(callback)
+        .catch((err) => {
+          console.log("rejected", err);
+        });
+    },
+    getdataPhoto(callback) {
+      fetch("https://jsonplaceholder.typicode.com/photos")
+        .then((resp) => {
+          return resp.json();
+        })
+        .then(callback)
+        .catch((err) => {
+          console.log("rejected", err);
+        });
+    },
+    getdataTodo(callback) {
+      fetch("https://jsonplaceholder.typicode.com/todos")
+        .then((resp) => {
+          return resp.json();
+        })
+        .then(callback)
+        .catch((err) => {
+          console.log("rejected", err);
+        });
+    },
     //async/await
     async callapi() {
       try {
